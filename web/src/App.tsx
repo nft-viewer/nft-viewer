@@ -50,9 +50,11 @@ function App(props: any) {
 				{address && NFTData ? (
 					<>
 						<Stack direction="column">
-							<Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+							{NFTData.assets[index].is_nsfw ? (<Text fontSize="sm">NSFW, not displaying image</Text>) : (
+								<Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
 								<Image src={NFTData.assets[index].image_url} width="40vw" alt={NFTData.assets[index].name} />
-							</Box>
+								</Box>
+							)}
 							<Text style={{marginTop: 10}} fontSize="md">{NFTData.assets[index].name}</Text>
 						</Stack>
 					</>
