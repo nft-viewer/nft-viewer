@@ -37,14 +37,7 @@ function App(props: any) {
 	if (NFTData != null && !interval) {
 		interval = setInterval(() => {
 			console.log("updating...");
-
-			const newIndex = indexRef.current + 1 == NFTData.assets.length ? 0 : indexRef.current + 1;
-
-			if (props.desktop && newIndex != index && NFTData.assets[newIndex].name) {
-				new Notification(`${NFTData.assets[newIndex].name}`);
-			}
-
-			setIndex(newIndex);
+			setIndex(indexRef.current + 1 == NFTData.assets.length ? 0 : indexRef.current + 1);
 		}, 5000);
 	}
 	
