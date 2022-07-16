@@ -4,22 +4,24 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { ChainId, ThirdwebProvider } from '@thirdweb-dev/react';
 import App from './App';
 
-let config = {desktop: false, address: null};
+declare var window: any
 
-if (location.hash.slice(1) != "") {
-	try {
-		config = JSON.parse(atob(location.hash.slice(1)));
-	} catch (e) {}
-}
+(async () => {
+	let config = {desktop: false, address: null};
 
-console.log(config);
-
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<React.StrictMode>
-		<ThirdwebProvider desiredChainId={ChainId.Mainnet}>
-			<ChakraProvider theme={extendTheme({config: {initialColorMode: "dark", useSystemColorMode: false}})}>
-				<App desktop={config.desktop} address={config.address} showAddressWarning={!!config.desktop} />
-			</ChakraProvider>
-		</ThirdwebProvider>
-	</React.StrictMode>
-);
+	if (typeof window.desktopAPI != "undefined") {
+		config = await window.desktopAPI.getConfig();
+	}
+	
+	console.log(config);
+	
+	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+		<React.StrictMode>
+			<ThirdwebProvider desiredChainId={ChainId.Mainnet}>
+				<ChakraProvider theme={extendTheme({config: {initialColorMode: "dark", useSystemColorMode: false}})}>
+					<App desktop={config.desktop} address={config.address} showAddressWarning={!!config.desktop} />
+				</ChakraProvider>
+			</ThirdwebProvider>
+		</React.StrictMode>
+	);
+})();

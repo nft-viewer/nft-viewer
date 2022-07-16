@@ -7,7 +7,7 @@
     "build": "esbuild src/index.ts --bundle --minify --platform=node --external:electron --outfile=app/index.js",
     "start": "NODE_ENV=development electron .",
 				"start-prod": "NODE_ENV=production electron .",
-    "dist": "tsc",
+    "dist": "tsc && npm run build && cd ../web; npm run build-desktop; cd ../desktop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

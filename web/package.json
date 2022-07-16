@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --base=\"./\"",
+    "build-desktop": "tsc && vite build --base=\"./\" --outDir=../desktop/app/web",
     "preview": "vite preview"
   },
   "dependencies": {

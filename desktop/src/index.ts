@@ -1,11 +1,10 @@
 // Modules to control application life and create native browser window
-const { dialog, app, BrowserWindow, Menu, Tray, nativeImage } = require('electron');
+const { dialog, app, BrowserWindow, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const isReachable = require('is-reachable');
 
 let mainWindow;
-let config;
 
 function createWindow() {
 	// Create the browser window.
@@ -20,19 +19,22 @@ function createWindow() {
 		title: "NFT Viewer"
 	});
 
-	const args = process.argv[0] == "electron" || process.argv[0].endsWith("electron") ? process.argv.slice(2) : process.argv.slice(1);
-
-	config = {desktop: true, address: args[0]};
+	ipcMain.handle("getConfig", (event: any) => {
+		const args = process.argv[0] == "electron" || process.argv[0].endsWith("electron") ? process.argv.slice(2) : process.argv.slice(1);
+		const config = {desktop: true, address: args[0]};
+		
+		return config;
+	});
 
 	mainWindow.setMenu(null);
 
 	(async () => {
-		if (await isReachable("localhost:5173")) {
-			mainWindow.loadURL(`http://localhost:5173/#${btoa(JSON.stringify(config))}`);
+		if (process.env.NODE_ENV == "development" && await isReachable("localhost:5173")) {
+			mainWindow.loadURL("http://localhost:5173");
 			return;
 		}
 
-		mainWindow.loadURL(`https://nft-viewer.github.io/#${btoa(JSON.stringify(config))}`);
+		mainWindow.loadFile("app/web/index.html");
 	})();
 
 	if (process.env.NODE_ENV == "development") {
