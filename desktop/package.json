@@ -1,13 +1,13 @@
 {
-  "name": "@nft-viewer/desktop",
+  "name": "nft-viewer",
   "version": "0.0.1",
   "description": "A desktop client for nft-viewer.",
   "main": "app/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --minify --platform=node --external:electron --outfile=app/index.js",
     "start": "NODE_ENV=development electron .",
-				"start-prod": "NODE_ENV=production electron .",
-    "dist": "tsc && npm run build && cd ../web; npm run build-desktop; cd ../desktop",
+    "start-prod": "NODE_ENV=production electron .",
+    "dist": "tsc && npm run build && cd ../web; npm run build-desktop; cd ../desktop && electron-builder --linux tar.gz AppImage",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -26,6 +26,7 @@
   "homepage": "https://github.com/nft-viewer/nft-viewer#readme",
   "devDependencies": {
     "electron": "^19.0.8",
+    "electron-builder": "^23.1.0",
     "esbuild": "^0.14.49",
     "typescript": "^4.7.4"
   },
