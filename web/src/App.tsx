@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Stack, Box, Text, IconButton, Image, Center, useColorMode } from '@chakra-ui/react';
+import { Button, Stack, Box, Text, IconButton, Image, Center, useColorMode, Skeleton } from '@chakra-ui/react';
 import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
 import { SunIcon, MoonIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 import { getNFTData } from './util';
@@ -37,7 +37,14 @@ function App(props: any) {
 	if (NFTData != null && !interval) {
 		interval = setInterval(() => {
 			console.log("updating...");
-			setIndex(indexRef.current + 1 == NFTData.assets.length ? 0 : indexRef.current + 1);
+
+			const newIndex = indexRef.current + 1 == NFTData.assets.length ? 0 : indexRef.current + 1;
+
+			if (props.desktop && newIndex != index && NFTData.assets[newIndex].name) {
+				new Notification(`${NFTData.assets[newIndex].name}`);
+			}
+
+			setIndex(newIndex);
 		}, 5000);
 	}
 	
@@ -52,11 +59,11 @@ function App(props: any) {
 						<Stack direction="column">
 							{NFTData.assets[index].is_nsfw ? (<Text fontSize="sm">NSFW, not displaying image</Text>) : (
 								<Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-									<Image src={NFTData.assets[index].image_url} width="40vw" alt={NFTData.assets[index].name} />
+									{NFTData.assets[index].image_url == null ? (<Image src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=" width="40vw" />) : (<Image src={NFTData.assets[index].image_url} width="40vw" alt={NFTData.assets[index].name} />)}
 									{NFTData.assets[index].animation_url && NFTData.assets[index].animation_url.endsWith(".mp3") ? (<audio controls={false} loop={true} autoPlay={true} src={NFTData.assets[index].animation_url} />) : null}
 								</Box>
 							)}
-							<Text style={{marginTop: 10}} fontSize="md">{NFTData.assets[index].name}</Text>
+							<Text style={{marginTop: 10}} fontSize="md">{NFTData.assets[index].name ?? "Unable to load this NFT."}</Text>
 						</Stack>
 					</>
 				) : (
