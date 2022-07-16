@@ -52,7 +52,8 @@ function App(props: any) {
 						<Stack direction="column">
 							{NFTData.assets[index].is_nsfw ? (<Text fontSize="sm">NSFW, not displaying image</Text>) : (
 								<Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-								<Image src={NFTData.assets[index].image_url} width="40vw" alt={NFTData.assets[index].name} />
+									<Image src={NFTData.assets[index].image_url} width="40vw" alt={NFTData.assets[index].name} />
+									{NFTData.assets[index].animation_url && NFTData.assets[index].animation_url.endsWith(".mp3") ? (<audio controls={false} loop={true} autoPlay={true} src={NFTData.assets[index].animation_url} />) : null}
 								</Box>
 							)}
 							<Text style={{marginTop: 10}} fontSize="md">{NFTData.assets[index].name}</Text>
